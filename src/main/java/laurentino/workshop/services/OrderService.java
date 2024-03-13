@@ -1,7 +1,7 @@
 package laurentino.workshop.services;
 
-import laurentino.workshop.entities.User;
-import laurentino.workshop.repositories.UserRepository;
+import laurentino.workshop.entities.Order;
+import laurentino.workshop.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,21 +9,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class OrderService {
 
-    private UserRepository repository;
+    private OrderRepository repository;
 
     @Autowired
-    public UserService(UserRepository repository) {
+    public OrderService(OrderRepository repository) {
         this.repository = repository;
     }
 
-    public List<User> findAll() {
+    public List<Order> findAll() {
         return repository.findAll();
     }
 
-    public User findById(Long id) {
-        Optional<User> obj = repository.findById(id);
+    public Order findById(Long id) {
+        Optional<Order> obj = repository.findById(id);
         return obj.get();
     }
 }
