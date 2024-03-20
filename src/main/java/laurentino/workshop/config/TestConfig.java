@@ -1,14 +1,8 @@
 package laurentino.workshop.config;
 
-import laurentino.workshop.entities.Category;
-import laurentino.workshop.entities.User;
-import laurentino.workshop.entities.Order;
-import laurentino.workshop.entities.Product;
+import laurentino.workshop.entities.*;
 import laurentino.workshop.entities.enums.OrderStatus;
-import laurentino.workshop.repositories.CategoryRepository;
-import laurentino.workshop.repositories.OrderRepository;
-import laurentino.workshop.repositories.ProductRepository;
-import laurentino.workshop.repositories.UserRepository;
+import laurentino.workshop.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -21,17 +15,19 @@ import java.util.Arrays;
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
 
-    private UserRepository userRepository;
-    private OrderRepository orderRepository;
-    private CategoryRepository categoryRepository;
-    private ProductRepository productRepository;
+    private UserRepository userRep;
+    private OrderRepository orderRep;
+    private CategoryRepository categotyRep;
+    private ProductRepository productRep;
+    private OrderItemRepository orderItemRep;
 
     @Autowired
-    public TestConfig(UserRepository userRepository, OrderRepository orderRepository, CategoryRepository categoryRepository, ProductRepository productRepository) {
-        this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
-        this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
+    public TestConfig(UserRepository userRep, OrderRepository orderRep, CategoryRepository categotyRep, ProductRepository productRep, OrderItemRepository orderItemRep) {
+        this.userRep = userRep;
+        this.orderRep = orderRep;
+        this.categotyRep = categotyRep;
+        this.productRep = productRep;
+        this.orderItemRep = orderItemRep;
     }
 
     @Override
@@ -54,8 +50,8 @@ public class TestConfig implements CommandLineRunner {
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.PAID, u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.CANCELED, u1);
 
-        categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
-        productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+        categotyRep.saveAll(Arrays.asList(cat1, cat2, cat3));
+        productRep.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
         p1.getCategories().add(cat2);
         p2.getCategories().add(cat1);
@@ -64,10 +60,17 @@ public class TestConfig implements CommandLineRunner {
         p4.getCategories().add(cat3);
         p5.getCategories().add(cat2);
 
-        productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+        productRep.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
-        userRepository.saveAll(Arrays.asList(u1, u2));
-        orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+        userRep.saveAll(Arrays.asList(u1, u2));
+        orderRep.saveAll(Arrays.asList(o1, o2, o3));
+
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+
+        orderItemRep.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 
     }
 }
