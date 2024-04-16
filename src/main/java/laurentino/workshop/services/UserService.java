@@ -1,5 +1,6 @@
 package laurentino.workshop.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import laurentino.workshop.entities.User;
 import laurentino.workshop.repositories.UserRepository;
 import laurentino.workshop.services.exception.DatabaseException;
@@ -55,9 +56,13 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User entity, User obj) {
